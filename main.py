@@ -1,5 +1,6 @@
 from fib_cache import caching_fibonacci
 from generator_numbers import generator_numbers, sum_profit
+from assistant import assistant_main
 
 def main() -> None:
     #Точка входу.
@@ -19,3 +20,4 @@ def main() -> None:
 # Перевіряємо, що запущено напряму
 if __name__ == "__main__":
     main()
+    assistant_main()
