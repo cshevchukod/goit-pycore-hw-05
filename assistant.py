@@ -21,51 +21,86 @@ def parse_input(user_input):
     args = parts[1:]
     return cmd, args
 
+
+# Декоратор для обробки помилок введення
+def input_error(func):
+
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+
+        except KeyError:
+            # Коли контакту з таким ім'ям нема в книзі
+            return "Contact not found."
+
+        except ValueError:
+            # Коли передано неправильну кількість аргументів
+            return "Give me name and phone please."
+
+        except IndexError:
+            # Коли користувач не передав аргументи взагалі
+            return "Enter the argument for the command"
+
+    return inner
+
+
 # Обробники команд
 
+@input_error
 def add_contact(args, contacts):
 
     #Команда:  add <name> <phone>
     #Додає новий контакт у словник або перезаписує номер, якщо ім’я вже є.
 
     if len(args) != 2:
-        return "Usage: add <name> <phone>"
+        # Неправильний формат виклику команди
+        raise ValueError
+
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
 
+@input_error
 def change_contact(args, contacts):
 
     #Команда:  change <name> <new_phone>
     #Змінює номер телефону для існуючого контакту.
 
     if len(args) != 2:
-        return "Usage: change <name> <new_phone>"
+        # Користувач не передав ім'я і новий номер
+        raise ValueError
+
     name, new_phone = args
 
     # Перевіряємо, чи є таке ім’я у словнику
     if name not in contacts:
-        return "Contact not found."
+        # Контакт не знайдено
+        raise KeyError
 
     contacts[name] = new_phone
     return "Contact updated."
 
 
+@input_error
 def show_phone(args, contacts):
     #Команда:  phone <name>
     #Виводить номер телефону за іменем контакту.
 
-    if len(args) != 1:
-        return "Usage: phone <name>"
+    if not args:
+        # Команда phone без аргументу
+        raise IndexError
+
     name = args[0]
 
     if name not in contacts:
-        return "Contact not found."
+        # Контакт з таким ім'ям не існує
+        raise KeyError
 
     return contacts[name]
 
 
+@input_error
 def show_all(contacts):
     #Команда:  all
     #Виводить усі контакти зі словника у форматі: Name: phone
