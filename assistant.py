@@ -30,19 +30,15 @@ def input_error(func):
             return func(*args, **kwargs)
 
         except KeyError:
-            # Коли контакту з таким ім'ям нема в книзі
             return "Contact not found."
 
         except ValueError:
-            # Коли передано неправильну кількість аргументів
             return "Give me name and phone please."
 
         except IndexError:
-            # Коли користувач не передав аргументи взагалі
             return "Enter the argument for the command"
 
     return inner
-
 
 # Обробники команд
 
